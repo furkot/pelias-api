@@ -9,9 +9,13 @@ if( peliasConfig.api.accessLog ){
 /** ----------------------- pre-processing-middleware ----------------------- **/
 
 app.use( require('./middleware/headers') );
-app.use( require('./middleware/cors') );
-app.use( require('./middleware/options') );
-app.use( require('./middleware/jsonp') );
+if ( peliasConfig.api.cors ) {
+  app.use( require('./middleware/cors') );
+  app.use( require('./middleware/options') );
+}
+if ( peliasConfig.api.jsonp ) {
+  app.use( require('./middleware/jsonp') );
+}
 
 /** ----------------------- routes ----------------------- **/
 
