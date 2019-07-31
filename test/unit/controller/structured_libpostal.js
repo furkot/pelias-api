@@ -5,6 +5,15 @@ const mock_logger = require('pelias-mock-logger');
 
 module.exports.tests = {};
 
+const res = {
+  locals: {
+    timings: {
+      start() {},
+      end() {}
+    }
+  }
+};
+
 module.exports.tests.interface = (test, common) => {
   test('valid interface', (t) => {
     t.equal(typeof libpostal, 'function', 'libpostal is a function');
@@ -38,7 +47,7 @@ module.exports.tests.early_exit_conditions = (test, common) => {
       }
     };
 
-    controller(req, undefined, () => {
+    controller(req, res, () => {
       t.deepEquals(req, {
         clean: {
           text: 'original query'
@@ -67,7 +76,7 @@ module.exports.tests.error_conditions = (test, common) => {
       errors: []
     };
 
-    controller(req, undefined, () => {
+    controller(req, res, () => {
       t.deepEquals(req, {
         clean: {
           text: 'original query'
@@ -117,7 +126,7 @@ module.exports.tests.error_conditions = (test, common) => {
 //       errors: []
 //     };
 //
-//     controller(req, undefined, () => {
+//     controller(req, res, () => {
 //       t.ok(logger.isWarnMessage('discarding libpostal parse of \'query value\' due to duplicate field assignments'));
 //
 //       t.deepEquals(req, {
@@ -151,7 +160,7 @@ module.exports.tests.error_conditions = (test, common) => {
 //       errors: []
 //     };
 //
-//     controller(req, undefined, () => {
+//     controller(req, res, () => {
 //       t.deepEquals(req, {
 //         clean: {
 //           text: 'query value'
@@ -195,7 +204,7 @@ module.exports.tests.success_conditions = (test, common) => {
       errors: []
     };
 
-    controller(req, undefined, () => {
+    controller(req, res, () => {
       t.deepEquals(req, {
         clean: {
           parsed_text: {
@@ -235,7 +244,7 @@ module.exports.tests.success_conditions = (test, common) => {
       errors: []
     };
 
-    controller(req, undefined, () => {
+    controller(req, res, () => {
       t.deepEquals(req, {
         clean: {
           parsed_text: {
@@ -275,7 +284,7 @@ module.exports.tests.success_conditions = (test, common) => {
       errors: []
     };
 
-    controller(req, undefined, () => {
+    controller(req, res, () => {
       t.deepEquals(req, {
         clean: {
           parsed_text: {
@@ -322,7 +331,7 @@ module.exports.tests.success_conditions = (test, common) => {
       errors: []
     };
 
-    controller(req, undefined, () => {
+    controller(req, res, () => {
       t.deepEquals(req, {
         clean: {
           parsed_text: {
@@ -405,7 +414,7 @@ module.exports.tests.success_conditions = (test, common) => {
   //     errors: []
   //   };
   //
-  //   controller(req, undefined, () => {
+  //   controller(req, res, () => {
   //     t.deepEquals(req, {
   //       clean: {
   //         text: 'original query',
@@ -455,7 +464,7 @@ module.exports.tests.success_conditions = (test, common) => {
   //     errors: []
   //   };
   //
-  //   controller(req, undefined, () => {
+  //   controller(req, res, () => {
   //     t.deepEquals(req, {
   //       clean: {
   //         text: 'original query',

@@ -131,7 +131,11 @@ function setup(service, should_execute) {
       lon: req.clean['point.lon']
     };
 
+    const { timings } = res.locals;
+    timings.start('pip');
     service(req, (err, results, metadata) => {
+      timings.end('pip');
+
       // if there's an error, log it and bail
       if (err) {
         logger.error('error contacting PIP service', err);

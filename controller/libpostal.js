@@ -70,7 +70,10 @@ function setup(libpostalService, should_execute) {
 
     const initialTime = debugLog.beginTimer(req);
 
+    const { timings } = res.locals;
+    timings.start('libpostal');
     libpostalService(req, (err, response) => {
+      timings.end('libpostal');
 
       if (err) {
         // push err.message or err onto req.errors

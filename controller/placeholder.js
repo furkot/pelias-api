@@ -255,7 +255,11 @@ function setup(placeholderService, do_geometric_filters_apply, should_execute) {
     const initialTime = debugLog.beginTimer(req);
     const start = Date.now();
 
+    const { timings } = res.locals;
+    timings.start('placeholder');
     placeholderService(req, (err, results) => {
+      timings.end('placeholder');
+
       logger.info('placeholder', {
         response_time: Date.now() - start,
         params: req.clean,

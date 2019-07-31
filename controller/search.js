@@ -59,7 +59,11 @@ function setup( apiConfig, esclient, query, should_execute ){
     operation.attempt((currentAttempt) => {
       const initialTime = debugLog.beginTimer(req, `Attempt ${currentAttempt}`);
       // query elasticsearch
+      const { timings } = res.locals;
+      timings.start('elasticsearch');
       searchService( esclient, cmd, function( err, docs, meta, data ){
+        timings.end('elasticsearch');
+
         const message = {
           controller: 'search',
           queryType: renderedQuery.type,
