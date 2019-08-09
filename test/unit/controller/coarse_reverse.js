@@ -4,14 +4,17 @@ const _  = require('lodash');
 
 module.exports.tests = {};
 
-const res = {
-  locals: {
-    timings: {
-      start() {},
-      end() {}
-    }
-  }
-};
+function makeRes() {
+  return Object.create({
+    startTime() {},
+    endTime() {}
+  });
+}
+
+function clean(r) {
+  delete r.startTime;
+  delete r.endTime;
+}
 
 module.exports.tests.interface = (test, common) => {
   test('valid interface', (t) => {
@@ -44,7 +47,7 @@ module.exports.tests.early_exit_conditions = (test, common) => {
     };
 
     // passing res=undefined verifies that it wasn't interacted with
-    t.doesNotThrow(controller.bind(null, req, res, next));
+    t.doesNotThrow(controller.bind(null, req, makeRes(), next));
     t.end();
 
   });
@@ -77,8 +80,7 @@ module.exports.tests.error_conditions = (test, common) => {
       t.pass('next() was called');
     };
 
-    // passing res=undefined verifies that it wasn't interacted with
-    controller(req, res, next);
+    controller(req, makeRes(), next);
 
     t.ok(logger.hasErrorMessages('this is an error'));
     t.end();
@@ -108,12 +110,13 @@ module.exports.tests.boundary_circle_radius_warnings = (test, common) => {
 
     const next = () => {};
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
-      data: [],
-      locals: res.locals
+      data: []
     };
 
     t.deepEquals(req.warnings, ['boundary.circle.radius is not applicable for coarse reverse']);
@@ -142,12 +145,13 @@ module.exports.tests.boundary_circle_radius_warnings = (test, common) => {
     // verify that next was called
     const next = () => { };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
-      data: [],
-      locals: res.locals
+      data: []
     };
 
     t.deepEquals(req.warnings, []);
@@ -254,7 +258,9 @@ module.exports.tests.success_conditions = (test, common) => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -321,8 +327,7 @@ module.exports.tests.success_conditions = (test, common) => {
           },
           bounding_box: '{"min_lat":40.006751,"max_lat":40.072939,"min_lon":-76.345902,"max_lon":-76.254038}'
         }
-      ],
-      locals: res.locals
+      ]
     };
 
     t.deepEquals(res, expected);
@@ -371,7 +376,9 @@ module.exports.tests.success_conditions = (test, common) => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -399,8 +406,7 @@ module.exports.tests.success_conditions = (test, common) => {
           },
           bounding_box: '{"min_lat":40.006751,"max_lat":40.072939,"min_lon":-76.345902,"max_lon":-76.254038}'
         }
-      ],
-      locals: res.locals
+      ]
     };
 
     t.deepEquals(res, expected);
@@ -446,7 +452,9 @@ module.exports.tests.success_conditions = (test, common) => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -470,8 +478,7 @@ module.exports.tests.success_conditions = (test, common) => {
           },
           bounding_box: '{"min_lat":40.006751,"max_lat":40.072939,"min_lon":-76.345902,"max_lon":-76.254038}'
         }
-      ],
-      locals: res.locals
+      ]
     };
 
     t.deepEquals(res, expected);
@@ -520,7 +527,9 @@ module.exports.tests.success_conditions = (test, common) => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -547,8 +556,7 @@ module.exports.tests.success_conditions = (test, common) => {
             lon: 21.212121
           }
         }
-      ],
-      locals: res.locals
+      ]
     };
 
     t.deepEquals(res, expected);
@@ -601,7 +609,9 @@ module.exports.tests.success_conditions = (test, common) => {
       t.pass('next() should have been called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -624,8 +634,7 @@ module.exports.tests.success_conditions = (test, common) => {
             neighbourhood_a: ['neighbourhood abbr']
           }
         }
-      ],
-      locals: res.locals
+      ]
     };
 
     t.deepEquals(req.clean.layers, [], 'req.clean.layers should be unmodified');
@@ -682,7 +691,9 @@ module.exports.tests.success_conditions = (test, common) => {
         t.pass('next() should have been called');
       };
 
+      const res = makeRes();
       controller(req, res, next);
+      clean(res);
 
       const expected = {
         meta: {},
@@ -705,8 +716,7 @@ module.exports.tests.success_conditions = (test, common) => {
               neighbourhood_a: ['neighbourhood abbr']
             }
           }
-        ],
-        locals: res.locals
+        ]
       };
 
       t.deepEquals(req.clean.layers, [non_coarse_layer], 'req.clean.layers should be unmodified');
@@ -765,7 +775,9 @@ module.exports.tests.success_conditions = (test, common) => {
         t.pass('next() should have been called');
       };
 
+      const res = makeRes();
       controller(req, res, next);
+      clean(res);
 
       const expected = {
         meta: {},
@@ -788,8 +800,7 @@ module.exports.tests.success_conditions = (test, common) => {
               neighbourhood_a: ['neighbourhood abbr']
             }
           }
-        ],
-        locals: res.locals
+        ]
       };
 
       t.deepEquals(req.clean.layers, [non_coarse_layer, 'neighbourhood'], 'req.clean.layers should be unmodified');
@@ -887,12 +898,13 @@ module.exports.tests.failure_conditions = (test, common) => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
-      data: [],
-      locals: res.locals
+      data: []
     };
 
     t.deepEquals(res, expected);
@@ -933,12 +945,13 @@ module.exports.tests.failure_conditions = (test, common) => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
-      data: [],
-      locals: res.locals
+      data: []
     };
 
     t.deepEquals(res, expected);
@@ -982,7 +995,9 @@ module.exports.tests.failure_conditions = (test, common) => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -999,8 +1014,7 @@ module.exports.tests.failure_conditions = (test, common) => {
         source_id: '20',
         _id: '20',
         _type: 'neighbourhood'
-      }],
-      locals: res.locals
+      }]
     };
 
     t.deepEquals(res, expected);

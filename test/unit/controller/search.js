@@ -5,8 +5,8 @@ const proxyquire =  require('proxyquire').noCallThru();
 module.exports.tests = {};
 
 const timings = {
-  start() {},
-  end() {}
+  startTime() {},
+  endTime() {}
 };
 
 module.exports.tests.interface = function(test, common) {
@@ -62,7 +62,7 @@ module.exports.tests.success = function(test, common) {
     })(config, esclient, query, () => { return true; });
 
     const req = { clean: { }, errors: [], warnings: [] };
-    const res = { locals: { timings } };
+    const res = Object.create(timings);
 
     const next = () => {
       t.deepEqual(req, {
@@ -123,7 +123,7 @@ module.exports.tests.success = function(test, common) {
     })(config, esclient, query, () => { return true; });
 
     const req = { clean: { }, errors: [], warnings: [] };
-    const res = { locals: { timings } };
+    const res = Object.create(timings);
 
     const next = () => {
       t.deepEqual(req, {
@@ -184,7 +184,7 @@ module.exports.tests.success = function(test, common) {
     })(config, esclient, query, () => { return true; });
 
     const req = { clean: { }, errors: [], warnings: [] };
-    const res = { locals: { timings }, meta: { query_type: 'this is the query type from a previous query'} };
+    const res = Object.assign({ meta: { query_type: 'this is the query type from a previous query'} }, timings);
 
     const next = () => {
       t.deepEqual(req, {
@@ -266,7 +266,7 @@ module.exports.tests.success = function(test, common) {
     })(config, esclient, query, () => { return true; });
 
     const req = { clean: { }, errors: [], warnings: [] };
-    const res = { locals: { timings } };
+    const res = Object.create(timings);
 
     const next = () => {
       t.deepEqual(req, {
@@ -340,7 +340,7 @@ module.exports.tests.timeout = function(test, common) {
     })(config, esclient, query, () => { return true; });
 
     const req = { clean: { }, errors: [], warnings: [] };
-    const res = { locals: { timings } };
+    const res = Object.create(timings);
 
     const next = () => {
       t.equal(searchServiceCallCount, 3+1);
@@ -392,7 +392,7 @@ module.exports.tests.timeout = function(test, common) {
     })(config, esclient, query, () => { return true; });
 
     const req = { clean: { }, errors: [], warnings: [] };
-    const res = { locals: { timings } };
+    const res = Object.create(timings);
 
     const next = () => {
       t.equal(searchServiceCallCount, 17+1);
@@ -432,7 +432,7 @@ module.exports.tests.timeout = function(test, common) {
     })(config, esclient, query, () => { return true; });
 
     const req = { clean: { }, errors: [], warnings: [] };
-    const res = { locals: { timings } };
+    const res = Object.create(timings);
 
     const next = () => {
       t.equal(searchServiceCallCount, 1);
@@ -473,7 +473,7 @@ module.exports.tests.timeout = function(test, common) {
     })(config, esclient, query, () => { return true; });
 
     const req = { clean: { }, errors: [], warnings: [] };
-    const res = { locals: { timings } };
+    const res = Object.create(timings);
 
     const next = () => {
       t.equal(searchServiceCallCount, 1);
@@ -502,7 +502,7 @@ module.exports.tests.should_execute = (test, common) => {
     const controller = setup( {}, esclient, query, () => { return false; } );
 
     const req = { };
-    const res = { locals: { timings } };
+    const res = Object.create(timings);
 
     const next = () => {
       delete res.locals;

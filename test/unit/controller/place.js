@@ -5,12 +5,8 @@ const proxyquire =  require('proxyquire').noCallThru();
 module.exports.tests = {};
 
 const response = {
-  locals: {
-    timings: {
-      start() {},
-      end() {}
-    }
-  }
+  startTime() {},
+  endTime() {}
 };
 
 module.exports.tests.interface = (test, common) => {

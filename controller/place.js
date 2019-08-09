@@ -47,10 +47,9 @@ function setup( apiConfig, esclient ){
     operation.attempt((currentAttempt) => {
       const initialTime = debugLog.beginTimer(req);
 
-      const { timings } = res.locals;
-      timings.start('mget');
+      res.startTime('mget');
       mgetService( esclient, cmd, function( err, docs, data) {
-        timings.end('mget');
+        res.endTime('mget');
         const message = {
           controller: 'place',
           queryType: 'place',

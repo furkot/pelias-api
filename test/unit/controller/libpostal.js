@@ -6,12 +6,8 @@ const mock_logger = require('pelias-mock-logger');
 module.exports.tests = {};
 
 const res = {
-  locals: {
-    timings: {
-      start() {},
-      end() {}
-    }
-  }
+  startTime() {},
+  endTime() {}
 };
 
 module.exports.tests.interface = (test, common) => {

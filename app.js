@@ -2,7 +2,7 @@ var app = require('express')();
 
 var peliasConfig = require( 'pelias-config' ).generate(require('./schema'));
 
-app.use( require( 'server-timings' ) );
+app.use( require( 'server-timing' )() );
 
 if( peliasConfig.api.accessLog ){
   app.use( require( './middleware/access_log' ).createAccessLogger( peliasConfig.api.accessLog ) );

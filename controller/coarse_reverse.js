@@ -131,10 +131,9 @@ function setup(service, should_execute) {
       lon: req.clean['point.lon']
     };
 
-    const { timings } = res.locals;
-    timings.start('pip');
+    res.startTime('pip');
     service(req, (err, results, metadata) => {
-      timings.end('pip');
+      res.endTime('pip');
 
       // if there's an error, log it and bail
       if (err) {
