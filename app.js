@@ -2,6 +2,8 @@ var app = require('express')();
 
 var peliasConfig = require( 'pelias-config' ).generate(require('./schema'));
 
+app.use( require( 'server-timing' )() );
+
 if( peliasConfig.api.accessLog ){
   app.use( require( './middleware/access_log' ).createAccessLogger( peliasConfig.api.accessLog ) );
 }
@@ -9,9 +11,13 @@ if( peliasConfig.api.accessLog ){
 /** ----------------------- pre-processing-middleware ----------------------- **/
 
 app.use( require('./middleware/headers') );
-app.use( require('./middleware/cors') );
-app.use( require('./middleware/options') );
-app.use( require('./middleware/jsonp') );
+if ( peliasConfig.api.cors ) {
+  app.use( require('./middleware/cors') );
+  app.use( require('./middleware/options') );
+}
+if ( peliasConfig.api.jsonp ) {
+  app.use( require('./middleware/jsonp') );
+}
 
 /** ----------------------- routes ----------------------- **/
 

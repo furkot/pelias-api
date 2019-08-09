@@ -18,6 +18,8 @@ module.exports = Joi.object().keys({
     indexName: Joi.string(),
     host: Joi.string(),
     accessLog: Joi.string().allow(''),
+    cors: Joi.boolean().default(true),
+    jsonp: Joi.boolean().default(true),
     relativeScores: Joi.boolean(),
     requestRetries: Joi.number().integer().min(0),
     customBoosts: Joi.object().keys({

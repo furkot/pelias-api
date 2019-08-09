@@ -4,6 +4,18 @@ const _  = require('lodash');
 
 module.exports.tests = {};
 
+function makeRes() {
+  return Object.create({
+    startTime() {},
+    endTime() {}
+  });
+}
+
+function clean(r) {
+  delete r.startTime;
+  delete r.endTime;
+}
+
 module.exports.tests.interface = (test, common) => {
   test('valid interface', (t) => {
     t.equal(typeof setup, 'function', 'setup is a function');
@@ -35,7 +47,7 @@ module.exports.tests.early_exit_conditions = (test, common) => {
     };
 
     // passing res=undefined verifies that it wasn't interacted with
-    t.doesNotThrow(controller.bind(null, req, undefined, next));
+    t.doesNotThrow(controller.bind(null, req, makeRes(), next));
     t.end();
 
   });
@@ -68,8 +80,7 @@ module.exports.tests.error_conditions = (test, common) => {
       t.pass('next() was called');
     };
 
-    // passing res=undefined verifies that it wasn't interacted with
-    controller(req, undefined, next);
+    controller(req, makeRes(), next);
 
     t.ok(logger.hasErrorMessages('this is an error'));
     t.end();
@@ -97,11 +108,11 @@ module.exports.tests.boundary_circle_radius_warnings = (test, common) => {
       }
     };
 
-    const res = { };
-
     const next = () => {};
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -131,12 +142,12 @@ module.exports.tests.boundary_circle_radius_warnings = (test, common) => {
       clean: {}
     };
 
-    const res = { };
-
     // verify that next was called
     const next = () => { };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -242,14 +253,14 @@ module.exports.tests.success_conditions = (test, common) => {
       }
     };
 
-    const res = { };
-
     // verify that next was called
     const next = () => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -360,14 +371,14 @@ module.exports.tests.success_conditions = (test, common) => {
       }
     };
 
-    const res = { };
-
     // verify that next was called
     const next = () => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -436,14 +447,14 @@ module.exports.tests.success_conditions = (test, common) => {
       }
     };
 
-    const res = { };
-
     // verify that next was called
     const next = () => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -511,14 +522,14 @@ module.exports.tests.success_conditions = (test, common) => {
       }
     };
 
-    const res = { };
-
     // verify that next was called
     const next = () => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -593,14 +604,14 @@ module.exports.tests.success_conditions = (test, common) => {
       }
     };
 
-    const res = { };
-
     // verify that next was called
     const next = () => {
       t.pass('next() should have been called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -675,14 +686,14 @@ module.exports.tests.success_conditions = (test, common) => {
         }
       };
 
-      const res = { };
-
       // verify that next was called
       const next = () => {
         t.pass('next() should have been called');
       };
 
+      const res = makeRes();
       controller(req, res, next);
+      clean(res);
 
       const expected = {
         meta: {},
@@ -759,14 +770,14 @@ module.exports.tests.success_conditions = (test, common) => {
         }
       };
 
-      const res = { };
-
       // verify that next was called
       const next = () => {
         t.pass('next() should have been called');
       };
 
+      const res = makeRes();
       controller(req, res, next);
+      clean(res);
 
       const expected = {
         meta: {},
@@ -882,14 +893,14 @@ module.exports.tests.failure_conditions = (test, common) => {
       }
     };
 
-    const res = { };
-
     // verify that next was called
     const next = () => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -929,14 +940,14 @@ module.exports.tests.failure_conditions = (test, common) => {
       }
     };
 
-    const res = { };
-
     // verify that next was called
     const next = () => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},
@@ -979,14 +990,14 @@ module.exports.tests.failure_conditions = (test, common) => {
       }
     };
 
-    const res = { };
-
     // verify that next was called
     const next = () => {
       t.pass('next() was called');
     };
 
+    const res = makeRes();
     controller(req, res, next);
+    clean(res);
 
     const expected = {
       meta: {},

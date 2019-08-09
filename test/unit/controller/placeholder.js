@@ -5,6 +5,16 @@ const _ = require('lodash');
 
 module.exports.tests = {};
 
+const timings = {
+  startTime() {},
+  endTime() {}
+};
+
+function clean(r) {
+  delete r.startTime;
+  delete r.endTime;
+}
+
 module.exports.tests.interface = (test, common) => {
   test('valid interface', (t) => {
     t.equal(typeof placeholder, 'function', 'placeholder is a function');
@@ -24,18 +34,18 @@ module.exports.tests.should_execute = (test, common) => {
     const should_execute = (req, res) => {
       // req and res should be passed to should_execute
       t.deepEquals(req, { a: 1 });
-      t.deepEquals(res, { b: 2 });
+      t.deepEquals(res, Object.assign({ b: 2 }, timings ));
       return false;
     };
 
     const controller = placeholder(placeholder_service, true, should_execute);
 
     const req = { a: 1 };
-    const res = { b: 2 };
+    const res = Object.assign({ b: 2 }, timings);
 
     controller(req, res, () => {
       t.notOk(placeholder_service_was_called);
-      t.deepEquals(res, { b: 2 });
+      t.deepEquals(res, Object.assign({ b: 2 }, timings ));
       t.end();
     });
 
@@ -53,7 +63,7 @@ module.exports.tests.should_execute = (test, common) => {
     const controller = placeholder(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { b: 2 };
+    const res = Object.assign({ b: 2 }, timings);
 
     controller(req, res, () => {
       t.ok(placeholder_service_was_called);
@@ -207,7 +217,7 @@ module.exports.tests.success = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -290,6 +300,7 @@ module.exports.tests.success = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isDebugMessage('[controller:placeholder] [result_count:2]'));
       t.end();
@@ -325,7 +336,7 @@ module.exports.tests.success = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -354,6 +365,7 @@ module.exports.tests.success = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isDebugMessage('[controller:placeholder] [result_count:1]'));
       t.end();
@@ -388,7 +400,7 @@ module.exports.tests.success = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -448,7 +460,7 @@ module.exports.tests.success = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -472,6 +484,7 @@ module.exports.tests.success = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isDebugMessage('[controller:placeholder] [result_count:1]'));
       t.end();
@@ -513,7 +526,7 @@ module.exports.tests.success = (test, common) => {
       })(placeholder_service, true, () => true);
 
       const req = { param1: 'param1 value' };
-      const res = { };
+      const res = Object.create(timings);
 
       controller(req, res, () => {
         const expected_res = {
@@ -537,6 +550,7 @@ module.exports.tests.success = (test, common) => {
           ]
         };
 
+        clean(res);
         t.deepEquals(res, expected_res);
         t.ok(logger.isDebugMessage('[controller:placeholder] [result_count:1]'));
       });
@@ -578,7 +592,7 @@ module.exports.tests.success = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -606,6 +620,7 @@ module.exports.tests.success = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isDebugMessage('[controller:placeholder] [result_count:1]'));
       t.end();
@@ -751,7 +766,7 @@ module.exports.tests.result_filtering = (test, common) => {
         'boundary.rect.max_lon': 2
       }
     };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -796,6 +811,7 @@ module.exports.tests.result_filtering = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.end();
     });
@@ -869,7 +885,7 @@ module.exports.tests.result_filtering = (test, common) => {
         'boundary.rect.max_lon': 1
       }
     };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -931,6 +947,7 @@ module.exports.tests.result_filtering = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.end();
     });
@@ -1070,7 +1087,7 @@ module.exports.tests.result_filtering = (test, common) => {
         'boundary.circle.radius': 500
       }
     };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -1115,6 +1132,7 @@ module.exports.tests.result_filtering = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.end();
     });
@@ -1186,7 +1204,7 @@ module.exports.tests.result_filtering = (test, common) => {
         'boundary.circle.radius': 500
       }
     };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -1248,6 +1266,7 @@ module.exports.tests.result_filtering = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.end();
     });
@@ -1340,7 +1359,7 @@ module.exports.tests.result_filtering = (test, common) => {
         ]
       }
     };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -1402,6 +1421,7 @@ module.exports.tests.result_filtering = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isDebugMessage('[controller:placeholder] [result_count:3]'));
       t.end();
@@ -1475,7 +1495,7 @@ module.exports.tests.result_filtering = (test, common) => {
         }
       }
     };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -1537,6 +1557,7 @@ module.exports.tests.result_filtering = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isDebugMessage('[controller:placeholder] [result_count:3]'));
       t.end();
@@ -1624,7 +1645,7 @@ module.exports.tests.result_filtering = (test, common) => {
         'boundary.country': ['ABC']
       }
     };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -1679,6 +1700,7 @@ module.exports.tests.result_filtering = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isDebugMessage('[controller:placeholder] [result_count:2]'));
       t.end();
@@ -1774,7 +1796,7 @@ module.exports.tests.result_filtering = (test, common) => {
         'boundary.country': ['ABC']
       }
     };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -1851,6 +1873,7 @@ module.exports.tests.result_filtering = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isDebugMessage('[controller:placeholder] [result_count:3]'));
       t.end();
@@ -1901,7 +1924,7 @@ module.exports.tests.lineage_errors = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -1930,6 +1953,7 @@ module.exports.tests.lineage_errors = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.end();
     });
@@ -1975,7 +1999,7 @@ module.exports.tests.lineage_errors = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -2004,6 +2028,7 @@ module.exports.tests.lineage_errors = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.end();
     });
@@ -2048,7 +2073,7 @@ module.exports.tests.lineage_errors = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -2077,6 +2102,7 @@ module.exports.tests.lineage_errors = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.end();
     });
@@ -2108,7 +2134,7 @@ module.exports.tests.geometry_errors = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -2132,6 +2158,7 @@ module.exports.tests.geometry_errors = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.end();
     });
@@ -2167,7 +2194,7 @@ module.exports.tests.centroid_errors = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -2192,6 +2219,7 @@ module.exports.tests.centroid_errors = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isErrorMessage(`could not parse centroid for id 123`));
       t.end();
@@ -2227,7 +2255,7 @@ module.exports.tests.centroid_errors = (test, common) => {
     })(placeholder_service, true, () => true);
 
     const req = { param1: 'param1 value' };
-    const res = { };
+    const res = Object.create(timings);
 
     controller(req, res, () => {
       const expected_res = {
@@ -2252,6 +2280,7 @@ module.exports.tests.centroid_errors = (test, common) => {
         ]
       };
 
+      clean(res);
       t.deepEquals(res, expected_res);
       t.ok(logger.isErrorMessage(`could not parse centroid for id 123`));
       t.end();
@@ -2297,7 +2326,7 @@ module.exports.tests.boundingbox_errors = (test, common) => {
       })(placeholder_service, true, () => true);
 
       const req = { param1: 'param1 value' };
-      const res = { };
+      const res = Object.create(timings);
 
       controller(req, res, () => {
         const expected_res = {
@@ -2325,6 +2354,7 @@ module.exports.tests.boundingbox_errors = (test, common) => {
           ]
         };
 
+        clean(res);
         t.deepEquals(res, expected_res);
         t.ok(logger.isErrorMessage(`could not parse bbox for id 123: ${bbox}`));
       });
@@ -2351,9 +2381,10 @@ module.exports.tests.error_conditions = (test, common) => {
     const req = {
       errors: []
     };
-    const res = {};
+    const res = Object.create(timings);
 
     controller(req, res, () => {
+      clean(res);
       t.deepEquals(res, {}, 'res should not have been modified');
       t.deepEquals(req.errors, ['placeholder service error']);
       t.notOk(logger.isDebugMessage(/\\[controller:placeholder\\] \\[result_count:\\d+\\]/));
@@ -2380,9 +2411,10 @@ module.exports.tests.error_conditions = (test, common) => {
     const req = {
       errors: []
     };
-    const res = {};
+    const res = Object.create(timings);
 
     controller(req, res, () => {
+      clean(res);
       t.deepEquals(res, {}, 'res should not have been modified');
       t.deepEquals(req.errors, ['placeholder service error']);
       t.notOk(logger.isDebugMessage(/\\[controller:placeholder\\] \\[result_count:\\d+\\]/));
@@ -2405,9 +2437,10 @@ module.exports.tests.error_conditions = (test, common) => {
     const req = {
       errors: []
     };
-    const res = {};
+    const res = Object.create(timings);
 
     controller(req, res, () => {
+      clean(res);
       t.deepEquals(res, {}, 'res should not have been modified');
       t.deepEquals(req.errors, [{ error_key: 'error_value' }]);
       t.notOk(logger.isDebugMessage(/\\[controller:placeholder\\] \\[result_count:\\d+\\]/));

@@ -4,6 +4,11 @@ const proxyquire =  require('proxyquire').noCallThru();
 
 module.exports.tests = {};
 
+const response = {
+  startTime() {},
+  endTime() {}
+};
+
 module.exports.tests.interface = (test, common) => {
   test('valid interface', (t) => {
     t.equal(typeof setup, 'function', 'setup is a function');
@@ -61,7 +66,7 @@ module.exports.tests.success = (test, common) => {
       errors: [],
       warnings: []
     };
-    const res = {};
+    const res = Object.assign({}, response);
 
     const next = () => {
       t.deepEqual(req.errors, []);
@@ -88,7 +93,7 @@ module.exports.tests.error_conditions = (test, common) => {
     const req = {
       errors: ['error']
     };
-    const res = { };
+    const res = Object.assign({}, response);
 
     t.doesNotThrow(() => {
       controller(req, res, () => {});
@@ -133,7 +138,7 @@ module.exports.tests.error_conditions = (test, common) => {
       errors: [],
       warnings: []
     };
-    const res = {};
+    const res = Object.assign({}, response);
 
     const next = () => {
       t.deepEqual(req.errors, [nonTimeoutError.message]);
@@ -199,7 +204,7 @@ module.exports.tests.timeout = function(test, common) {
       errors: [],
       warnings: []
     };
-    const res = {};
+    const res = Object.assign({}, response);
 
     const next = () => {
       t.equal(searchServiceCallCount, 3+1);
@@ -209,7 +214,6 @@ module.exports.tests.timeout = function(test, common) {
       }));
 
       t.deepEqual(req.errors, [timeoutError.message]);
-      t.deepEqual(res, {});
       t.end();
     };
 
@@ -254,7 +258,7 @@ module.exports.tests.timeout = function(test, common) {
       errors: [],
       warnings: []
     };
-    const res = {};
+    const res = Object.assign({}, response);
 
     const next = () => {
       t.equal(searchServiceCallCount, 17+1);
@@ -301,7 +305,7 @@ module.exports.tests.timeout = function(test, common) {
       errors: [],
       warnings: []
     };
-    const res = {};
+    const res = Object.assign({}, response);
 
     const next = () => {
       t.equal(searchServiceCallCount, 1);
@@ -345,7 +349,7 @@ module.exports.tests.timeout = function(test, common) {
       errors: [],
       warnings: []
     };
-    const res = {};
+    const res = Object.assign({}, response);
 
     const next = () => {
       t.equal(searchServiceCallCount, 1);

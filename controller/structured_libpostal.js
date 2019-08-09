@@ -3,7 +3,7 @@ const Debug = require('../helper/debug');
 const debugLog = new Debug('controller:libpostal');
 const logger = require('pelias-logger').get('api');
 
-// Find field in libpostal response 
+// Find field in libpostal response
 function findField(response, field, replacementField) {
   const libpostalField = response.find(f => f.label === field);
 
@@ -26,7 +26,9 @@ function setup(libpostalService, should_execute) {
 
     const initialTime = debugLog.beginTimer(req);
 
+    res.startTime('libpostal');
     libpostalService(req, (err, response) => {
+      res.endTime('libpostal');
       if (err) {
         // push err.message or err onto req.errors
         req.errors.push( _.get(err, 'message', err) );
